@@ -1,57 +1,38 @@
-
-function getInitialArray(k){
-    const array = [];
-    for(let arrayIndex = 0; arrayIndex < k; arrayIndex++){
-        array.push(undefined);
+function testNumber(number, k) {
+  const indexes = [];
+  let tester = 1;
+  let testerIndex = 0;
+  while (number !== 0) {
+    if (number & tester) {
+      indexes.push(testerIndex);
+      if (indexes.length > k) {
+        return null;
+      }
     }
-    array[0] = 0;
-    return array;
+    number = number >> 1;
+    testerIndex++;
+  }
+  if (indexes.length === k) {
+    return indexes;
+  } else {
+    return null;
+  }
 }
 
-function uploadArray(array){
-    while(array.includes(undefined)){
-        let index = array.indexOf(undefined);
-        array[index] = array[index - 1] + 1;
-    }
-    return array;
-}
-
-function fillArray(array){
-    return array.map(element => input[element]);
-}
-
-function nextCombination(array){
-    let index = array.indexOf(undefined);
-    if(index > 0){
-        index = index - 1;
-    } else {
-        index = k - 1;
-    }
-    const correction = k - 1 - index;
-    if(array[index] < (input.length - 1 - correction)){
-        array[index]++;
-    } else {
-        array[index] = undefined;
-        if(!array.every(element => element === undefined)){
-            return nextCombination(array);
-        }
-    }
-    return array;
+function getCombination(indexes, input){
+    return indexes.map(index => input[index]);
 }
 
 const input = [100, 200, 300, 400, 500];
 const k = 3;
 const combinations = [];
 
-let array = getInitialArray(k);
-
-while(!array.every(element => element === undefined)){
-    array = uploadArray(array);
-    let combination = fillArray(array);
-    combinations.push(combination);
-    array = nextCombination(array)
+const maxNumber = 2 ** input.length;
+for (let number = 0; number < maxNumber; number++) {
+  const indexArray = testNumber(number, k);
+  if (indexArray) {
+    combinations.push(getCombination(indexArray, input));
+  }
 }
 
 console.log(combinations);
-
-
